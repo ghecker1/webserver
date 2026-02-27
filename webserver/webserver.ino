@@ -16,8 +16,8 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws"); // access at ws://[esp ip]/ws
 AsyncEventSource events("/events"); // event source (Server-Sent events)
 
-const char* ssid = "your-ssid";
-const char* password = "your-pass";
+const char* ssid = "sssssssssss";
+const char* password = "pppppppppppppppppppp";
 
 //flag to use from web update to reboot the ESP
 bool shouldReboot = false;
