@@ -22,7 +22,9 @@ jobs:
           arduino-cli core install esp32:esp32@3.3.7
 
       - name: Install dependencies
-        run:  arduino-cli lib install ESPAsyncWebServer@3.10.0 AsyncTCP
+        run:  |
+          arduino-cli lib update-index
+          arduino-cli lib install ESPAsyncWebServer@3.10.0 AsyncTCP
 
 
       - name: Compile Sketch for ESP32
