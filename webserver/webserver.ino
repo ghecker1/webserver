@@ -65,16 +65,6 @@ void setup(){
     request->send(200);
   }, onUpload);
 
-  // send a file when /index is requested (SPIFFS example)
-  server.on("/index", HTTP_ANY, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/index.htm");
-  });
-
-  // send a file when /index is requested (LittleFS example)
-  server.on("/index", HTTP_ANY, [](AsyncWebServerRequest *request){
-    request->send(LittleFS, "/index.htm");
-  });
-
   // Simple Firmware Update Form
   server.on("/update", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "text/html", "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>");
@@ -105,12 +95,6 @@ void setup(){
       }
     }
   });
-
-  // attach filesystem root at URL /fs (SPIFFS example)
-  server.serveStatic("/fs", SPIFFS, "/");
-
-  // attach filesystem root at URL /fs (LittleFS example)
-  server.serveStatic("/fs", LittleFS, "/");
 
   // Catch-All Handlers
   // Any request that can not find a Handler that canHandle it
