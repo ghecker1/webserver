@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #if defined(ESP32) || defined(LIBRETINY)
-#include <AsyncTCP.h>
+//#include <AsyncTCP.h>
 #include <WiFi.h>
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
