@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run:  |
           arduino-cli lib update-index
-          arduino-cli lib install ESPAsyncWebServer@3.10.0 AsyncTCP
+          arduino-cli lib install espasyncwebserver@3.10.0 asynctcp
 
 
       - name: Compile Sketch for ESP32
