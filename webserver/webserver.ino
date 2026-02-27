@@ -10,7 +10,7 @@
 #include <WiFi.h>
 #endif
 
-#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWebSrv.h>
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws"); // access at ws://[esp ip]/ws
