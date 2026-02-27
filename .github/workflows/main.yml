@@ -27,7 +27,7 @@ jobs:
 
 
       - name: Compile Sketch for ESP32
-        run: cd src && arduino-cli compile --output-dir . --fqbn=esp32:esp32:esp32s3:CDCOnBoot=cdc,PSRAM=enabled,PartitionScheme=min_spiffs --warnings=none --verbose webserver.ino
+        run: cd webserver && arduino-cli compile --output-dir . --fqbn=esp32:esp32:esp32s3:CDCOnBoot=cdc,PSRAM=enabled,PartitionScheme=min_spiffs --warnings=none --verbose webserver.ino
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
