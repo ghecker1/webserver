@@ -47,7 +47,8 @@ int serveClient() {
   memset(content, 'a', sizeof(content));
   Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
-  Serial.println(F("availableForWrite(): %d", n));
+  Serial.print(F("availableForWrite(): "));
+  Serial.println(n);
   client->write(content, n);
   nTotal += n;
   if (nTotal > 10000) {
