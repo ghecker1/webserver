@@ -78,7 +78,7 @@ int serveClient() {
 
 void loop() {
   l++;
-  if (server.hasClient()) {
+  if (!client && server.hasClient()) {
     client = new WiFiClient(server.accept());
     Serial.println(F("============ New connection ============"));
     connect_time = millis();
