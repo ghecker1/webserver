@@ -70,7 +70,7 @@ void loop() {
   if (server.hasClient()) {
     client = new WiFiClient(server.accept());
     Serial.println(F("============ New connection ============"));
-    connect_time = millis()
+    connect_time = millis();
     //String req = client->readStringUntil('\r');
     while (client->available()) {
       // byte by byte is not very efficient
