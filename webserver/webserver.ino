@@ -46,23 +46,19 @@ void setup() {
 int serveClient() {
   static unsigned int totalWritten = 0;
   static unsigned int total = 100 * 1024;
-  memset(content, 'a', sizeof(content));
-  if (totalWritten == 0) {
-    sprintf(content, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-length: 102400\r\n\r\n");
-  }
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
-  if (totalWritten + n > total) {
-    n = total - totalWritten;
+  if (totalWritten == 0 && n > 200) {
+    Serial.println("Send headers");
+    client->write("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-length: 102400\r\n\r\n");
+    memset(content, 'a', sizeof(content));
+  } else {
+    if (totalWritten + n > total) {
+      n = total - totalWritten;
+    }
+    client->write(content, n);
+    totalWritten += n;
   }
-  /*
-  if (n > 0) {
-    Serial.print(F("availableForWrite: "));
-    Serial.println(n);
-  }
-  */
-  client->write(content, n);
-  totalWritten += n;
   if (totalWritten >= total) {
     Serial.print(millis()-connect_time);
     Serial.println(F(" ms"));
