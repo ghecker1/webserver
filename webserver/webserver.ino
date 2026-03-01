@@ -46,9 +46,11 @@ void setup() {
 int serveClient() {
   static unsigned int totalWritten = 0;
   static unsigned int total = 100 * 1024;
+  static uint8_t status = 0;
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
-  if (totalWritten == 0 && n > 200) {
+  if (status == 0 && n > 200) {
+    status = 1;
     Serial.println("Send headers");
     client->write("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-length: 102400\r\n\r\n");
     memset(content, 'a', sizeof(content));
@@ -66,6 +68,7 @@ int serveClient() {
     Serial.println(F(" bytes"));
     Serial.println(F("Complete"));
     totalWritten = 0;
+    status = 0;
     return 0;
   }
   //Serial.println(F("Incomplete"));
