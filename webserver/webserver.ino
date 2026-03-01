@@ -65,13 +65,12 @@ void loop() {
   if (server.hasClient()) {
     client = new WiFiClient(server.accept());
     Serial.println(F("New connection"));
-    client->read();
-    String req = client.readStringUntil('\r');
-    while (client.available()) {
+    String req = client->readStringUntil('\r');
+    while (client->available()) {
       // byte by byte is not very efficient
-      client.read();
+      client->read();
     }
-    client.print(F("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"));
+    client->print(F("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"));
   }
   if (client) {
     if (! serveClient() ) {
