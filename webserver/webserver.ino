@@ -91,8 +91,10 @@ void loop() {
   }
   if (client) {
     if (! serveClient() ) {
-      client->stop(100);
+      Serial.println(F("============ client->stop() ============"));
+      client->stop();
       delete(client);
+      Serial.println(F("============ client = NULL  ============"));
       client = NULL;
     }
   }
