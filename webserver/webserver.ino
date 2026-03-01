@@ -44,22 +44,18 @@ void setup() {
 
 int serveClient() {
   static unsigned int nTotal = 0;
-  char *s = NULL;
-  if (nTotal == 0) {
-    memset(headers, 'a', sizeof(headers));
-    sprintf(headers, "X-test: l=%d\r\n\r\n", l);
-    memset(content, 'a', sizeof(content));
-    s = headers;
-  } else {
-    s = content;
-  }
+  memset(content, 'a', sizeof(content));
+  Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
-  client->write(s, n);
+  Serial.println(F("availableForWrite(): %d", n));
+  client->write(content, n);
   nTotal += n;
   if (nTotal > 10000) {
+    Serial.println(F("Complete"));
     nTotal = 0;
     return 0;
   }
+  Serial.println(F("Incomplete"));
   return 1;
 }
 
@@ -67,7 +63,14 @@ void loop() {
   l++;
   if (server.hasClient()) {
     client = new WiFiClient(server.accept());
+    Serial.println(F("New connection"));
     client->read();
+    String req = client.readStringUntil('\r');
+    while (client.available()) {
+      // byte by byte is not very efficient
+      client.read();
+    }
+    client.print(F("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"));
   }
   if (client) {
     if (! serveClient() ) {
