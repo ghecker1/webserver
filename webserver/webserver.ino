@@ -1,82 +1,72 @@
-#include <Arduino.h>
-#if defined(ESP32) || defined(LIBRETINY)
-//#include <AsyncTCP.h>
-#include <WiFi.h>
-#elif defined(ESP8266)
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
-#elif defined(TARGET_RP2040) || defined(TARGET_RP2350) || defined(PICO_RP2040) || defined(PICO_RP2350)
-#include <RPAsyncTCP.h>
-#include <WiFi.h>
-#endif
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright 2016-2026 Hristo Gochkov, Mathieu Carbou, Emil Muratov, Will Miles
 
-#include <ESPAsyncWebSrv.h>
+//
+// Query and send headers
+//
 
-AsyncWebServer server(80);
-AsyncWebSocket ws("/ws"); // access at ws://[esp ip]/ws
-AsyncEventSource events("/events"); // event source (Server-Sent events)
+#include <Wifi.h>
 
-const char* ssid = "sssssssssss";
-const char* password = "pppppppppppppppppppp";
+char ssid[] = "";
+char pass[] = "";
 
-//flag to use from web update to reboot the ESP
-bool shouldReboot = false;
+WiFiServer server[80];
+unsinged long l = 0;
 
-void onRequest(AsyncWebServerRequest *request){
-  //Handle Unknown Request
-  request->send(404);
-}
+void wifiSetup() {
+  while (status != WL_CONNECTED) {
+    Serial.print("Attempting to connect to Network named: ");
+    Serial.println(ssid);                   // print the network name (SSID);
 
-void onBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
-  //Handle body
-}
-
-void onUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final){
-  //Handle upload
-}
-
-void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len){
-  //Handle WebSocket event
-}
-
-void setup(){
-  Serial.begin(115200);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.printf("WiFi Failed!\n");
-    return;
+    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+    status = WiFi.begin(ssid, pass);
+    // wait 10 seconds for connection:
+    delay(10000);
   }
-
-  // attach AsyncWebSocket
-  ws.onEvent(onEvent);
-  server.addHandler(&ws);
-
-  // attach AsyncEventSource
-  server.addHandler(&events);
-
-  // respond to GET requests on URL /heap
-  server.on("/heap", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/plain", String(ESP.getFreeHeap()));
-  });
-
-  // Catch-All Handlers
-  // Any request that can not find a Handler that canHandle it
-  // ends in the callbacks below.
-  server.onNotFound(onRequest);
-  server.onFileUpload(onUpload);
-  server.onRequestBody(onBody);
-
-  server.begin();
+  server.begin();                           // start the web server on port 80
+  printWifiStatus();        
 }
 
-void loop(){
-  if(shouldReboot){
-    Serial.println("Rebooting...");
-    delay(100);
-    ESP.restart();
+unsigned char headers[2048];
+unsigned char content[2048];
+
+void setup() {
+  wifiSetup();
+}
+
+void serveClient() {
+  unsigned int nTotal = 0;
+  unsigned char *s;
+  if (nTotal == 0) {
+    memset(headers, 'a', sizeof(headers));
+    sprintf(headers, "X-test: l=%d\r\n\r\n", l);
+    memset(content, 'a', sizeof(content));
+    s = headers;
+  } else {
+    s = content;
   }
-  static char temp[128];
-  sprintf(temp, "Seconds since boot: %u", millis()/1000);
-  events.send(temp, "time"); //send event "time"
+  n = client.availableForWrite();
+  client.write(buffer, n);
+  nTotal += n;
+  if (nTotal > 10000) {
+    nTotal = 0;
+    return 0
+  }
+  return 1;
+}
+
+void loop() {
+  l++;
+  WiFIclient client = server.available();
+  if (client) {
+    WiFiclient client1 = client;
+    client1.read();
+    client = NULL;
+  }
+  if (client1) {
+    if (! serveClient(client1) ) {
+      client1.stop();
+      client1 = NULL;
+    }
+  }
 }
