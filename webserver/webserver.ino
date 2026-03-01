@@ -47,7 +47,7 @@ int serveClient() {
   static unsigned int nTotal = 0;
   memset(content, 'a', sizeof(content));
   if (nTotal == 0) {
-    sprintf(content, "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n");
+    sprintf(content, "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\n");
   }
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
@@ -80,7 +80,7 @@ void loop() {
   }
   if (client) {
     if (! serveClient() ) {
-      client->stop();
+      client->close();
       delete(client);
       client = NULL;
     }
