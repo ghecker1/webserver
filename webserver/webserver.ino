@@ -12,6 +12,7 @@ char pass[] = "pppppppppppppppppppp";
 WiFiServer server(80);
 WiFiClient *client;
 
+unsigned long connect_time = 0;
 unsigned long l = 0;
 char headers[2048];
 char content[2048];
@@ -55,6 +56,7 @@ int serveClient() {
   client->write(content, n);
   nTotal += n;
   if (nTotal > 10000) {
+    Serial.println(millis()-connect_time);
     Serial.println(F("Complete"));
     nTotal = 0;
     return 0;
@@ -68,6 +70,7 @@ void loop() {
   if (server.hasClient()) {
     client = new WiFiClient(server.accept());
     Serial.println(F("============ New connection ============"));
+    connect_time = millis()
     //String req = client->readStringUntil('\r');
     while (client->available()) {
       // byte by byte is not very efficient
