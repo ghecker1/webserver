@@ -44,21 +44,28 @@ void setup() {
 }
 
 int serveClient() {
-  static unsigned int nTotal = 0;
+  static unsigned int totalWritten = 0;
+  static unsinged int total = 100 * 1024;
   memset(content, 'a', sizeof(content));
-  if (nTotal == 0) {
+  if (totalWritten == 0) {
     sprintf(content, "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\n");
   }
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
+  if (totalWritten + n > total) {
+    n = total - totalWritten;
+  }
   Serial.print(F("availableForWrite(): "));
   Serial.println(n);
   client->write(content, n);
-  nTotal += n;
-  if (nTotal > 100000) {
-    Serial.println(millis()-connect_time);
+  totalWritten += n;
+  if (totalWritten >= total) {
+    Serial.print(millis()-connect_time);
+    Serial.println(F(" ms"));
+    Serial.print(totalWritten);
+    Serial.println(F(" bytes"));
     Serial.println(F("Complete"));
-    nTotal = 0;
+    totalWritten = 0;
     return 0;
   }
   //Serial.println(F("Incomplete"));
