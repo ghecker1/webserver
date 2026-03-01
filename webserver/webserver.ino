@@ -55,7 +55,7 @@ int serveClient() {
   Serial.println(n);
   client->write(content, n);
   nTotal += n;
-  if (nTotal > 10000) {
+  if (nTotal > 100000) {
     Serial.println(millis()-connect_time);
     Serial.println(F("Complete"));
     nTotal = 0;
