@@ -44,7 +44,7 @@ void setup() {
 
 int serveClient() {
   static unsigned int nTotal = 0;
-  unsigned char *s = NULL;
+  char *s = NULL;
   if (nTotal == 0) {
     memset(headers, 'a', sizeof(headers));
     sprintf(headers, "X-test: l=%d\r\n\r\n", l);
@@ -53,8 +53,8 @@ int serveClient() {
   } else {
     s = content;
   }
-  int n = client.availableForWrite();
-  client.write(s, n);
+  int n = client->availableForWrite();
+  client->write(s, n);
   nTotal += n;
   if (nTotal > 10000) {
     nTotal = 0;
@@ -70,7 +70,7 @@ void loop() {
     client->read();
   }
   if (client) {
-    if (! serveClient(client1) ) {
+    if (! serveClient() ) {
       client->stop();
       delete(client);
       client = NULL;
