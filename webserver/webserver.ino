@@ -1,11 +1,10 @@
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// Copyright 2016-2026 Hristo Gochkov, Mathieu Carbou, Emil Muratov, Will Miles
-
-//
-// Query and send headers
-//
-
-#include <Wifi.h>
+#if defined(ESP8266)
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#elif defined(ESP32)
+#include <WiFi.h>
+#include <ESPmDNS.h>
+#endif
 
 char ssid[] = "";
 char pass[] = "";
