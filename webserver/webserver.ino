@@ -59,8 +59,6 @@ int serveClient() {
     Serial.println();
     Serial.print(F("availableForWrite: "));
     Serial.println(n);
-  } else {
-    Serial.print(F("."));
   }
   client->write(content, n);
   totalWritten += n;
