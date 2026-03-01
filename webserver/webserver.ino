@@ -49,7 +49,7 @@ void serveClient() {
   nTotal += n;
   if (nTotal > 10000) {
     nTotal = 0;
-    return 0
+    return 0;
   }
   return 1;
 }
