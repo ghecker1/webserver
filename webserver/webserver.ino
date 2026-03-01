@@ -9,31 +9,40 @@
 char ssid[] = "sssssssssss";
 char pass[] = "pppppppppppppppppppp";
 
-WiFiServer server[80];
-unsinged long l = 0;
+WiFiServer server(80);
+WiFiClient *client;
 
-void wifiSetup() {
-  while (status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to Network named: ");
-    Serial.println(ssid);                   // print the network name (SSID);
-
-    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    status = WiFi.begin(ssid, pass);
-    // wait 10 seconds for connection:
-    delay(10000);
-  }
-  server.begin();                           // start the web server on port 80
-  printWifiStatus();        
-}
-
+unsigned long l = 0;
 unsigned char headers[2048];
 unsigned char content[2048];
 
 void setup() {
-  wifiSetup();
+  Serial.begin(115200);
+
+  // Connect to WiFi network
+  Serial.println();
+  Serial.println();
+  Serial.print(F("Connecting to "));
+  Serial.println(ssid);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, pass);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(F("."));
+  }
+  Serial.println();
+  Serial.println(F("WiFi connected"));
+
+  // Start the server
+  server.begin();
+  Serial.println(F("Server started"));
+
+  // Print the IP address
+  Serial.println(WiFi.localIP());}
 }
 
-void serveClient() {
+int serveClient() {
   unsigned int nTotal = 0;
   unsigned char *s;
   if (nTotal == 0) {
@@ -45,7 +54,7 @@ void serveClient() {
     s = content;
   }
   n = client.availableForWrite();
-  client.write(buffer, n);
+  client.write(s, n);
   nTotal += n;
   if (nTotal > 10000) {
     nTotal = 0;
@@ -56,16 +65,15 @@ void serveClient() {
 
 void loop() {
   l++;
-  WiFIclient client = server.available();
-  if (client) {
-    WiFiClient client1 = client;
-    client1.read();
-    client = NULL;
+  if (server.hasClient()) {
+    client = new WiFiClient(server.accept());
+    client.read();
   }
-  if (client1) {
+  if (client) {
     if (! serveClient(client1) ) {
-      client1.stop();
-      client1 = NULL;
+      client.stop();
+      client = delete(client);
+      client = NULL;
     }
   }
 }
