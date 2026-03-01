@@ -47,13 +47,15 @@ int serveClient() {
   static unsigned int totalWritten = 0;
   static unsigned int total = 100 * 1024;
   static uint8_t status = 0;
+  static char headers[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-length: 102400\r\n\r\n";
+
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
-  if (status == 0 && n > 200) {
-    status = 1;
+  if (status == 0 && n > sizeof(headers)) {
     Serial.println("Send headers");
-    client->write("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-length: 102400\r\n\r\n");
+    client->write(headers);
     memset(content, 'a', sizeof(content));
+    status = 1;
   } else {
     if (totalWritten + n > total) {
       n = total - totalWritten;
