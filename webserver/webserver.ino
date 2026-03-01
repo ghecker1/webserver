@@ -55,8 +55,13 @@ int serveClient() {
   if (totalWritten + n > total) {
     n = total - totalWritten;
   }
-  Serial.print(F("availableForWrite(): "));
-  Serial.println(n);
+  if (n > 0) {
+    Serial.println();
+    Serial.print(F("availableForWrite: "));
+    Serial.println(n);
+  } else {
+    Serial.print(F("."));
+  }
   client->write(content, n);
   totalWritten += n;
   if (totalWritten >= total) {
