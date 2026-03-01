@@ -6,8 +6,8 @@
 #include <ESPmDNS.h>
 #endif
 
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "sssssssssss";
+char pass[] = "pppppppppppppppppppp";
 
 WiFiServer server[80];
 unsinged long l = 0;
@@ -58,7 +58,7 @@ void loop() {
   l++;
   WiFIclient client = server.available();
   if (client) {
-    WiFiclient client1 = client;
+    WiFiClient client1 = client;
     client1.read();
     client = NULL;
   }
