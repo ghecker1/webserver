@@ -13,8 +13,8 @@ WiFiServer server(80);
 WiFiClient *client;
 
 unsigned long l = 0;
-unsigned char headers[2048];
-unsigned char content[2048];
+char headers[2048];
+char content[2048];
 
 void setup() {
   Serial.begin(115200);
@@ -39,12 +39,12 @@ void setup() {
   Serial.println(F("Server started"));
 
   // Print the IP address
-  Serial.println(WiFi.localIP());}
+  Serial.println(WiFi.localIP());
 }
 
 int serveClient() {
-  unsigned int nTotal = 0;
-  unsigned char *s;
+  static unsigned int nTotal = 0;
+  unsigned char *s = NULL;
   if (nTotal == 0) {
     memset(headers, 'a', sizeof(headers));
     sprintf(headers, "X-test: l=%d\r\n\r\n", l);
@@ -53,7 +53,7 @@ int serveClient() {
   } else {
     s = content;
   }
-  n = client.availableForWrite();
+  int n = client.availableForWrite();
   client.write(s, n);
   nTotal += n;
   if (nTotal > 10000) {
@@ -67,12 +67,12 @@ void loop() {
   l++;
   if (server.hasClient()) {
     client = new WiFiClient(server.accept());
-    client.read();
+    client->read();
   }
   if (client) {
     if (! serveClient(client1) ) {
-      client.stop();
-      client = delete(client);
+      client->stop();
+      delete(client);
       client = NULL;
     }
   }
