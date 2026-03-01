@@ -80,7 +80,7 @@ void loop() {
   }
   if (client) {
     if (! serveClient() ) {
-      client->close();
+      client->stop(100);
       delete(client);
       client = NULL;
     }
