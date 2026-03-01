@@ -48,7 +48,7 @@ int serveClient() {
   static unsinged int total = 100 * 1024;
   memset(content, 'a', sizeof(content));
   if (totalWritten == 0) {
-    sprintf(content, "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\n");
+    sprintf(content, "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\nContent-length: 102400\r\n\r\n");
   }
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
