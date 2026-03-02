@@ -51,9 +51,9 @@ int serveClient() {
 
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
-  if (status == 0 && n > sizeof(headers)) {
+  if (status == 0 && n > strlen(headers)) {
     Serial.println("Send headers");
-    client->write(headers, sizeof(headers));
+    client->write(headers, strlen(headers));
     memset(content, 'a', sizeof(content));
     status = 1;
   } else {
