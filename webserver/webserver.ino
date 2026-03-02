@@ -68,14 +68,16 @@ int serveClient() {
   int n = client->availableForWrite();
   if (status == 0) {
     if (n > headers_size) {
-      Serial.println("Send headers");
+      Serial.print("Send headers: ");
+      Serial.printf("%d", headers_size);
+      Serial.println();
       client->write(headers, headers_size);
       memset(content, 'a', sizeof(content));
       status = 1;
     } else {
       Serial.println("Waiting");
     }
-  } else {
+  } else if (n > 0) {
     if (totalWritten + n > total) {
       n = total - totalWritten;
     }
