@@ -66,7 +66,7 @@ int serveClient() {
 
   //Serial.println(F("Entering serveClient()"));
   int n = client->availableForWrite();
-  if (status == 0)
+  if (status == 0) {
     if (n > headers_size) {
       Serial.println("Send headers");
       client->write(headers, headers_size);
