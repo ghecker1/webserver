@@ -98,5 +98,7 @@ void loop() {
       Serial.println(F("============ client = NULL  ============"));
       client = NULL;
     }
+  } else {
+    delay(20);
   }
 }
