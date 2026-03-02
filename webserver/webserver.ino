@@ -53,7 +53,7 @@ int serveClient() {
   int n = client->availableForWrite();
   if (status == 0 && n > sizeof(headers)) {
     Serial.println("Send headers");
-    client->write(headers);
+    client->write(headers, sizeof(headers));
     memset(content, 'a', sizeof(content));
     status = 1;
   } else {
