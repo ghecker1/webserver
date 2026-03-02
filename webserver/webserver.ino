@@ -39,6 +39,6 @@ void setup() {
 }
 
 void loop() {
-  delay(500);
-  Serial.print(F("."));
+  //delay(500);
+  //Serial.print(F("."));
 }
