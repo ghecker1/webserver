@@ -41,6 +41,7 @@ void setup() {
 
   // Print the IP address
   Serial.println(WiFi.localIP());
+  delay(500);
 }
 
 int serveClient() {
