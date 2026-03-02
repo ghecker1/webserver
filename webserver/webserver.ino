@@ -17,6 +17,15 @@ unsigned long l = 0;
 char headers[2048];
 char content[2048];
 
+void printScanResult(int networksFound)
+{
+  Serial.printf("%d network(s) found\n", networksFound);
+  for (int i = 0; i < networksFound; i++)
+  {
+    Serial.printf("%d: %s, Ch:%d (%ddBm) %s\n", i + 1, WiFi.SSID(i).c_str(), WiFi.channel(i), WiFi.RSSI(i), WiFi.encryptionType(i) == ENC_TYPE_NONE ? "open" : "");
+  }
+}
+
 void setup() {
   Serial.begin(115200);
 
@@ -27,6 +36,8 @@ void setup() {
   Serial.println(ssid);
 
   WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  printScanResult(WiFi.scanNetworks());
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
