@@ -39,11 +39,6 @@ void setup() {
 }
 
 void loop() {
-  if (!client && server.hasClient()) {
-    client = new WiFiClient(server.accept());
-    Serial.println(F("============ New connection ============"));
-    client->stop();
-    delete(client);
-    client = NULL;
-  }
+  delay(500);
+  Serial.print(F("."));
 }
