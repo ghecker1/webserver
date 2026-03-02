@@ -68,6 +68,7 @@ int serveClient() {
     connect_time = millis();
     headers_size = sprintf(headers, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-length: %d\r\n\r\n", total);
     memset(content, 'a', sizeof(content));
+    totalWritten = 0;
     if (n > headers_size) {
       Serial.print("Send headers: ");
       Serial.printf("%d", headers_size);
@@ -86,16 +87,16 @@ int serveClient() {
     }
     client->write(content, n);
     totalWritten += n;
-  }
-  if (totalWritten >= total) {
-    Serial.print(millis()-connect_time);
-    Serial.println(F(" ms"));
-    Serial.print(totalWritten);
-    Serial.println(F(" bytes"));
-    Serial.println(F("Complete"));
-    totalWritten = 0;
-    status = 0;
-    return 0;
+    if (totalWritten >= total) {
+      Serial.print(millis()-connect_time);
+      Serial.println(F(" ms"));
+      Serial.print(totalWritten);
+      Serial.println(F(" bytes"));
+      Serial.println(F("Complete"));
+      totalWritten = 0;
+      status = 0;
+      return 0;
+    }
   }
   //Serial.println(F("Incomplete"));
   return 1;
@@ -106,11 +107,11 @@ void loop() {
   if (!client && server.hasClient()) {
     client = new WiFiClient(server.accept());
     Serial.println(F("============ New connection ============"));
-    //String req = client->readStringUntil('\r');
+    String req = client->readStringUntil('\r');
     while (client->available()) {
       Serial.print(client->read());
     }
-    Serial.println();
+    Serial.println(req);
   }
   if (client) {
     if (! serveClient() ) {
@@ -119,6 +120,7 @@ void loop() {
       delete(client);
       status = 0;
       Serial.println(F("============ client = NULL  ============"));
+      Serial.println(l);
       client = NULL;
     }
   }
