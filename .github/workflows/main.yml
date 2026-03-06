@@ -26,7 +26,6 @@ jobs:
           arduino-cli lib update-index
 
       - name: Install ESPAsyncTCP (ESP8266)
-        if: ${{ matrix.core == 'esp8266:esp8266' }}
         run: ARDUINO_LIBRARY_ENABLE_UNSAFE_INSTALL=true arduino-cli lib install --git-url https://github.com/ESP32Async/ESPAsyncTCP#v2.0.0
 
       - name: Install ESPAsyncWebServer
