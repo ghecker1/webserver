@@ -87,11 +87,7 @@ static const char *htmlContent PROGMEM = R"(
 static const size_t htmlContentLength = strlen_P(htmlContent);
 
 void dumpFreeMemory(char *msg) {
-  Serial.printf("%s:", msg);
-  Serial.println();
-//  Serial.printf("- getFreeMemory(): %d", getFreeMemory());
-//  Serial.println();
-  Serial.printf("- ESP.getFreeHeap(): %d", ESP.getFreeHeap());
+  Serial.printf("%10d: %20s: ESP.getFreeHeap: %6d ESP.getMinFreeHeap: %6d", millis(), msg, ESP.getFreeHeap(), ESP.getMinFreeHeap());
   Serial.println();
 }
 
