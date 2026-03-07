@@ -89,8 +89,8 @@ static const size_t htmlContentLength = strlen_P(htmlContent);
 void dumpFreeMemory(char *msg) {
   Serial.printf("%s:", msg);
   Serial.println();
-  Serial.printf("- getFreeMemory(): %d", getFreeMemory());
-  Serial.println();
+//  Serial.printf("- getFreeMemory(): %d", getFreeMemory());
+//  Serial.println();
   Serial.printf("- ESP.getFreeHeap(): %d", ESP.getFreeHeap());
   Serial.println();
 }
