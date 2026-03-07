@@ -65,7 +65,8 @@ void setup() {
     int i;
     for (i = 0; i < headers; i++) {
       const AsyncWebHeader *h = request->getHeader(i);
-      Serial.printf("HEADER[%s]: %s\n", h->name().c_str(), h->value().c_str());
+      Serial.printf("HEADER[%s]: %s", h->name().c_str(), h->value().c_str());
+      Serial.println();
     }
 
     AsyncWebServerResponse *response = request->beginResponse(200, "text/plain", "Hello World!");
