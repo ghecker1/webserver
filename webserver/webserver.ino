@@ -24,6 +24,77 @@ static AsyncWebServer server(80);
 char ssid[] = "sssssssssss";
 char pass[] = "pppppppppppppppppppp";
 
+static const char *htmlContent PROGMEM = R"(
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sample HTML</title>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, purus a euismod
+    rhoncus, urna ipsum cursus massa, eu dictum tellus justo ac justo. Quisque ullamcorper
+    arcu nec tortor ullamcorper, vel fermentum justo fermentum. Vivamus sed velit ut elit
+    accumsan congue ut ut enim. Ut eu justo eu lacus varius gravida ut a tellus. Nulla facilisi.
+    Integer auctor consectetur ultricies. Fusce feugiat, mi sit amet bibendum viverra, orci leo
+    dapibus elit, id varius sem dui id lacus.</p>
+</body>
+</html>
+)";
+
+static const size_t htmlContentLength = strlen_P(htmlContent);
+
+void dumpFreeMemory(char *msg) {
+  Serial.printf("%s:", msg);
+  Serial.println();
+  Serial.printf("- getFreeMemory(): %d", getFreeMemory());
+  Serial.println();
+  Serial.printf("- ESP.getFreeHeap(): %d", ESP.getFreeHeap());
+  Serial.println();
+}
+
 void setup_wifi() {
   // Connect to WiFi network
   Serial.println();
@@ -60,6 +131,7 @@ void setup() {
   // curl -v http://192.168.4.1
   //
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    dumpFreeMemory("/ initial");
     //List all collected headers
     int headers = request->headers();
     int i;
@@ -85,7 +157,54 @@ void setup() {
     //Remove all headers with the same name
     response->removeHeader("Set-Cookie");
 
+    dumpFreeMemory("/ before request->send(response)");
     request->send(response);
+    dumpFreeMemory("/ after request->send(response)");
+  });
+
+
+  // from ESPAsyncWebServer : examples/FlashResponse/FlashResponse.ino
+
+  server.on("/fromflash", HTTP_GET, [](AsyncWebServerRequest *request) {
+    dumpFreeMemory("/fromflash initial");
+    // need to cast to uint8_t*
+    // if you do not, the const char* will be copied in a temporary String buffer
+    request->send(200, "text/html", (uint8_t *)htmlContent, htmlContentLength);
+    dumpFreeMemory("/fromflash after send");
+  });
+
+
+  // from ESPAsyncWebServer : examples/ChunkResponse/ChunkResponse.ino with caching removed
+
+  server.on("/chunked", HTTP_GET, [](AsyncWebServerRequest *request) {
+
+    dumpFreeMemory("/chunked initial");
+
+    AsyncWebServerResponse *response = request->beginChunkedResponse("text/html", [](uint8_t *buffer, size_t maxLen, size_t index) -> size_t {
+      Serial.printf("%u / %u\n", index, htmlContentLength);
+      dumpFreeMemory("/chunked callback");
+
+      // finished ?
+      if (htmlContentLength <= index) {
+        Serial.println("finished");
+        return 0;
+      }
+
+      // serve a maximum of 256 or maxLen bytes of the remaining content
+      // this small number is specifically chosen to demonstrate the chunking
+      // DO NOT USE SUCH SMALL NUMBER IN PRODUCTION
+      // Reducing the chunk size will increase the response time, thus reducing the server's capacity in processing concurrent requests
+      const int chunkSize = min((size_t)256, min(maxLen, htmlContentLength - index));
+      Serial.printf("sending: %u\n", chunkSize);
+
+      memcpy(buffer, htmlContent + index, chunkSize);
+
+      return chunkSize;
+    });
+
+    dumpFreeMemory("/chunked before request->send(response)");
+    request->send(response);
+    dumpFreeMemory("/chunked after request->send(response)");
   });
 
   server.begin();
@@ -94,4 +213,5 @@ void setup() {
 void loop() {
   //Sleep in the loop task to not keep the CPU busy
   delay(1000);
+  dumpFreeMemory("loop()");
 }
