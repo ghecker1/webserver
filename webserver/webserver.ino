@@ -177,7 +177,7 @@ void setup() {
     dumpFreeMemory("/chunked initial");
 
     AsyncWebServerResponse *response = request->beginChunkedResponse("text/html", [](uint8_t *buffer, size_t maxLen, size_t index) -> size_t {
-      Serial.printf("%u / %u", index, htmlContentLength);
+      Serial.printf("%u / %u / %u", index, htmlContentLength, maxLen);
       Serial.println();
       dumpFreeMemory("/chunked callback");
 
@@ -191,7 +191,7 @@ void setup() {
       // this small number is specifically chosen to demonstrate the chunking
       // DO NOT USE SUCH SMALL NUMBER IN PRODUCTION
       // Reducing the chunk size will increase the response time, thus reducing the server's capacity in processing concurrent requests
-      const int chunkSize = min((size_t)256, min(maxLen, htmlContentLength - index));
+      const int chunkSize = min((size_t)2048, min(maxLen, htmlContentLength - index));
       Serial.printf("sending: %u", chunkSize);
       Serial.println();
 
