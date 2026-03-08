@@ -191,7 +191,7 @@ void setup() {
       // this small number is specifically chosen to demonstrate the chunking
       // DO NOT USE SUCH SMALL NUMBER IN PRODUCTION
       // Reducing the chunk size will increase the response time, thus reducing the server's capacity in processing concurrent requests
-      const int chunkSize = min((size_t)2048, min(maxLen, htmlContentLength - index));
+      const int chunkSize = min((size_t)64, min(maxLen, htmlContentLength - index));
       Serial.printf("sending: %u", chunkSize);
       Serial.println();
 
