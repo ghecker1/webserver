@@ -136,7 +136,15 @@ void onStationModeDHCPTimeout(void) {
 void setup_wifi() {
 
   // setSleepMode (WiFiSleepType_t type, int listenInterval=0)
-  //setSleepMode(WIFI_MODEM_SLEEP);
+  Serial.print("Sleep mode: ");
+  Serial.println(getSleepMode());
+  setSleepMode(WIFI_MODEM_SLEEP);
+  Serial.print("Sleep mode: ");
+  Serial.println(getSleepMode());
+  Serial.println("Sleep modes: ");
+  Serial.println(WIFI_NONE_SLEEP);
+  Serial.println(WIFI_LIGHT_SLEEP);
+  Serial.println(WIFI_MODEM_SLEEP);
 
   // Connect to WiFi network
   Serial.println();
@@ -266,5 +274,5 @@ void setup() {
 void loop() {
   //Sleep in the loop task to not keep the CPU busy
   delay(1000);
-  dumpFreeMemory("loop()");
+  //dumpFreeMemory("loop()");
 }
