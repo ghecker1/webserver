@@ -136,7 +136,7 @@ void setup_wifi() {
   WiFi.mode(WIFI_STA);
 
   // event handler
-  connectedEventHandler = WiFi.onStationModeConnected(onStationModeConnected);
+  WiFi.onStationModeConnected(onStationModeConnected);
   disconnectedEventHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
   gotIpEventHandler = WiFi.onStationModeGotIP(onStationModeGotIP);
 
