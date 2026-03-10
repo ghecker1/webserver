@@ -109,17 +109,28 @@ WiFiEventHandler  onSoftAPModeStationDisconnected (std::function< void(const WiF
 WiFiEventHandler connectedEventHandler;
 WiFiEventHandler disconnectedEventHandler;
 WiFiEventHandler gotIpEventHandler;
+WiFiEventHandler onStationModeAuthModeChanged;
+WiFiEventHandler onStationModeDHCPTimeout;
 
 void onStationModeConnected(const WiFiEventStationModeConnected &event) {
   Serial.println("onStationModeConnected");
 }
 
-void onStationModeDisconnected(const WiFiEventStationModeDisconnected& event) {
+void onStationModeDisconnected(const WiFiEventStationModeDisconnected &event) {
   Serial.println("onStationModeDisconnected");
 }
 
-void onStationModeGotIP(const WiFiEventStationModeGotIP& event) {
-  Serial.println("onStationModeGotIP");
+void onStationModeGotIP(const WiFiEventStationModeGotIP &event) {
+  Serial.print("onStationModeGotIP, IP: ");
+  Serial.println(WiFi.localIP());
+}
+
+void onStationModeAuthModeChanged(const WiFiEventStationModeAuthModeChanged &event) {
+  Serial.println("onStationModeAuthModeChanged");
+}
+
+void onStationModeDHCPTimeout(void) {
+  Serial.println("onStationModeDHCPTimeout");
 }
 
 void setup_wifi() {
@@ -136,9 +147,11 @@ void setup_wifi() {
   WiFi.mode(WIFI_STA);
 
   // event handler
-  WiFi.onStationModeConnected(onStationModeConnected);
+  connectedEventHandler = WiFi.onStationModeConnected(onStationModeConnected);
   disconnectedEventHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
   gotIpEventHandler = WiFi.onStationModeGotIP(onStationModeGotIP);
+  onStationModeAuthModeChanged = WiFi.onStationModeAuthModeChanged(onStationModeAuthModeChanged);
+  onStationModeDHCPTimeout = WiFi.onStationModeDHCPTimeout(onStationModeDHCPTimeout);
 
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
