@@ -106,7 +106,9 @@ WiFiEventHandler  onSoftAPModeStationDisconnected (std::function< void(const WiF
 
 */
 
+WiFiEventHandler connectedEventHandler;
 WiFiEventHandler disconnectedEventHandler;
+WiFiEventHandler gotIpEventHandler;
 
 void onStationModeConnected(const WiFiEventStationModeConnected &event) {
   Serial.println("onStationModeConnected");
@@ -131,12 +133,13 @@ void setup_wifi() {
   Serial.print(F("Connecting to "));
   Serial.println(ssid);
 
-  // event handler
-  WiFi.onStationModeConnected(onStationModeConnected);
-  disconnectedEventHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
-  WiFi.onStationModeGotIP(onStationModeGotIP);
-
   WiFi.mode(WIFI_STA);
+
+  // event handler
+  connectedEventHandler = WiFi.onStationModeConnected(onStationModeConnected);
+  disconnectedEventHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
+  gotIpEventHandler = WiFi.onStationModeGotIP(onStationModeGotIP);
+
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
