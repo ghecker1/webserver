@@ -91,12 +91,50 @@ void dumpFreeMemory(char *msg) {
   Serial.println();
 }
 
+/*
+
+WiFiEventHandler  onStationModeConnected (std::function< void(const WiFiEventStationModeConnected &)>)
+WiFiEventHandler  onStationModeDisconnected (std::function< void(const WiFiEventStationModeDisconnected &)>)
+
+WiFiEventHandler  onStationModeAuthModeChanged (std::function< void(const WiFiEventStationModeAuthModeChanged &)>)
+WiFiEventHandler  onStationModeGotIP (std::function< void(const WiFiEventStationModeGotIP &)>)
+
+WiFiEventHandler  onStationModeDHCPTimeout (std::function< void(void)>)
+
+WiFiEventHandler  onSoftAPModeStationConnected (std::function< void(const WiFiEventSoftAPModeStationConnected &)>)
+WiFiEventHandler  onSoftAPModeStationDisconnected (std::function< void(const WiFiEventSoftAPModeStationDisconnected &)>)
+
+*/
+
+WiFiEventHandler disconnectedEventHandler;
+
+void onStationModeConnected(const WiFiEventStationModeConnected &event) {
+  Serial.println("onStationModeConnected");
+}
+
+void onStationModeDisconnected(const WiFiEventStationModeDisconnected& event) {
+  Serial.println("onStationModeDisconnected");
+}
+
+void onStationModeGotIP(const WiFiEventStationModeGotIP& event) {
+  Serial.println("onStationModeGotIP");
+}
+
 void setup_wifi() {
+
+  // setSleepMode (WiFiSleepType_t type, int listenInterval=0)
+  //setSleepMode(WIFI_MODEM_SLEEP);
+
   // Connect to WiFi network
   Serial.println();
   Serial.println();
   Serial.print(F("Connecting to "));
   Serial.println(ssid);
+
+  // event handler
+  WiFi.onStationModeConnected(onStationModeConnected);
+  disconnectedEventHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
+  WiFi.onStationModeGotIP(onStationModeGotIP);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
