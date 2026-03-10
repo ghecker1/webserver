@@ -109,8 +109,8 @@ WiFiEventHandler  onSoftAPModeStationDisconnected (std::function< void(const WiF
 WiFiEventHandler connectedEventHandler;
 WiFiEventHandler disconnectedEventHandler;
 WiFiEventHandler gotIpEventHandler;
-WiFiEventHandler onStationModeAuthModeChanged;
-WiFiEventHandler onStationModeDHCPTimeout;
+WiFiEventHandler AuthModeChangedEventHandler;
+WiFiEventHandler DHCPTimeoutEventHandler;
 
 void onStationModeConnected(const WiFiEventStationModeConnected &event) {
   Serial.println("onStationModeConnected");
@@ -150,8 +150,8 @@ void setup_wifi() {
   connectedEventHandler = WiFi.onStationModeConnected(onStationModeConnected);
   disconnectedEventHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
   gotIpEventHandler = WiFi.onStationModeGotIP(onStationModeGotIP);
-  onStationModeAuthModeChanged = WiFi.onStationModeAuthModeChanged(onStationModeAuthModeChanged);
-  onStationModeDHCPTimeout = WiFi.onStationModeDHCPTimeout(onStationModeDHCPTimeout);
+  AuthModeChangedEventHandler = WiFi.onStationModeAuthModeChanged(onStationModeAuthModeChanged);
+  DHCPTimeoutEventHandler = WiFi.onStationModeDHCPTimeout(onStationModeDHCPTimeout);
 
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
