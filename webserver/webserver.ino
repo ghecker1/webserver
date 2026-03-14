@@ -121,6 +121,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.print(millis()); Serial.println(": loop()");
-  delay(1000);
+  //Serial.print(millis()); Serial.println(": loop()");
+  delay(10);
 }
