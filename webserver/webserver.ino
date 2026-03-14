@@ -20,6 +20,9 @@
 char ssid[] = "sssssssssss";
 char pass[] = "pppppppppppppppppppp";
 
+
+// https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html
+
 WiFiEventHandler connectedEventHandler;
 WiFiEventHandler disconnectedEventHandler;
 WiFiEventHandler gotIpEventHandler;
@@ -51,10 +54,13 @@ void setup_wifi() {
 
   // setSleepMode (WiFiSleepType_t type, int listenInterval=0)
   //Serial.print("Set sleep mode: WIFI_MODEM_SLEEP");
-  //Serial.println(getSleepMode());
-  //setSleepMode(WIFI_MODEM_SLEEP);
-  //Serial.print("Sleep mode: ");
-  //Serial.println(getSleepMode());
+
+  Serial.print(millis()); Serial.print(": Sleep mode: "); Serial.println(WiFi.getSleepMode());
+
+  WiFi.setSleepMode(WIFI_MODEM_SLEEP);
+
+  Serial.print(millis()); Serial.print(": Sleep mode: "); Serial.println(WiFi.getSleepMode());
+
   /*
   Serial.println("Sleep modes: ");
   Serial.println(WIFI_NONE_SLEEP);
@@ -65,8 +71,7 @@ void setup_wifi() {
   // Connect to WiFi network
   Serial.println();
   Serial.println();
-  Serial.print(F("Connecting to "));
-  Serial.println(ssid);
+  Serial.print(millis()); Serial.print(F(": Connecting to ")); Serial.println(ssid);
 
   WiFi.mode(WIFI_STA);
 
@@ -83,12 +88,26 @@ void setup_wifi() {
     Serial.print(F("."));
   }
   Serial.println();
-  Serial.println(F("WiFi connected"));
+  Serial.print(millis()); Serial.println(F(": WiFi connected"));
 
   // Print the IP address
-  Serial.println(WiFi.localIP());
+  Serial.print(millis()); Serial.println(WiFi.localIP());
 }
 
+void deepsleep() {
+  //Serial.println("WiFi.disconnect()");
+  //WiFi.disconnect();
+  //WiFi.mode(WIFI_OFF);
+
+  Serial.print(millis()); Serial.println(": ESP.deepSleep");
+  delay(500);
+  ESP.deepSleep(5e6);
+  delay(500);
+  Serial.print(millis()); Serial.println(": ESP.deepSleep() failed. This code should not be reached.");
+  delay(500);
+}
+
+bool _deepsleep = false;
 
 void setup() {
   Serial.begin(115200);
@@ -96,18 +115,12 @@ void setup() {
 
   setup_wifi();
 
-  Serial.println(millis());
-  delay(3000);
-  Serial.println(millis());
-  Serial.println("ESP.deepSleep");
-  delay(500);
-  ESP.deepSleep(5e6);
-  delay(500);
-  Serial.println("ESP.deepSleep() failed. This code should not be reached.");
-  delay(500);
+  if (_deepsleep) {
+    deepsleep();
+  }
 }
 
 void loop() {
-  Serial.println("ESP.deepSleep() failed. This code should not be reached.");
+  Serial.print(millis()); Serial.println(": loop()");
   delay(1000);
 }
