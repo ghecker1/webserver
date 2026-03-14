@@ -58,7 +58,7 @@ void setup_wifi() {
   Serial.print(millis()); Serial.print(": Sleep mode: "); Serial.println(WiFi.getSleepMode());
 
   //WiFi.setSleepMode(WIFI_MODEM_SLEEP);
-  WiFi.setSleepMode(WIFI_NONE_SLEEP);
+  //WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
   Serial.print(millis()); Serial.print(": Sleep mode: "); Serial.println(WiFi.getSleepMode());
 
