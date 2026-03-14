@@ -92,7 +92,9 @@ void setup_wifi() {
   Serial.print(millis()); Serial.println(F(": WiFi connected"));
 
   // Print the IP address
-  Serial.print(millis()); Serial.println(WiFi.localIP());
+  Serial.print(millis()); Serial.print("IP: "); Serial.println(WiFi.localIP());
+
+  Serial.print(millis()); Serial.println("Verbunden mit BSSID: " + WiFi.BSSIDstr());
 }
 
 void deepsleep() {
