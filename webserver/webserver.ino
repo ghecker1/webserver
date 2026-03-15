@@ -85,8 +85,8 @@ void setup_wifi() {
   int32_t channel = 0;
   WiFi.begin(ssid, pass, channel, bssid);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(F("."));
+    delay(10);
+    //Serial.print(F("."));
   }
   Serial.println();
   Serial.print(millis()); Serial.println(F(": WiFi connected"));
