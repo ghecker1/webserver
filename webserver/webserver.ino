@@ -83,8 +83,9 @@ void setup_wifi() {
   AuthModeChangedEventHandler = WiFi.onStationModeAuthModeChanged(onStationModeAuthModeChanged);
   DHCPTimeoutEventHandler = WiFi.onStationModeDHCPTimeout(onStationModeDHCPTimeout);
 
-  uint8_t bssid[] = {0x08, 0x96, 0xD7, 0x71, 0x6A, 0x47};
-  WiFi.begin(ssid, pass, bssid);
+  const uint8_t bssid[] = {0x08, 0x96, 0xD7, 0x71, 0x6A, 0x47};
+  int32_t channel = 0;
+  WiFi.begin(ssid, pass, channel, bssid);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(F("."));
