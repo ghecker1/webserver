@@ -30,27 +30,28 @@ WiFiEventHandler AuthModeChangedEventHandler;
 WiFiEventHandler DHCPTimeoutEventHandler;
 
 void onStationModeConnected(const WiFiEventStationModeConnected &event) {
-  Serial.println("onStationModeConnected");
+  Serial.print(millis()); Serial.println(": onStationModeConnected");
 }
 
 void onStationModeDisconnected(const WiFiEventStationModeDisconnected &event) {
-  Serial.println("onStationModeDisconnected");
+  Serial.print(millis()); Serial.println(": onStationModeDisconnected");
 }
 
 void onStationModeGotIP(const WiFiEventStationModeGotIP &event) {
-  Serial.print("onStationModeGotIP, IP: ");
+  Serial.print(millis()); Serial.print(": onStationModeGotIP, IP: ");
   Serial.println(WiFi.localIP());
 }
 
 void onStationModeAuthModeChanged(const WiFiEventStationModeAuthModeChanged &event) {
-  Serial.println("onStationModeAuthModeChanged");
+  Serial.print(millis()); Serial.println(": onStationModeAuthModeChanged");
 }
 
 void onStationModeDHCPTimeout(void) {
-  Serial.println("onStationModeDHCPTimeout");
+  Serial.print(millis()); Serial.println(": onStationModeDHCPTimeout");
 }
 
 void setup_wifi() {
+  Serial.println();
 
   // setSleepMode (WiFiSleepType_t type, int listenInterval=0)
   //Serial.print("Set sleep mode: WIFI_MODEM_SLEEP");
@@ -70,8 +71,6 @@ void setup_wifi() {
   */
 
   // Connect to WiFi network
-  Serial.println();
-  Serial.println();
   Serial.print(millis()); Serial.print(F(": Connecting to ")); Serial.println(ssid);
 
   WiFi.mode(WIFI_STA);
@@ -118,7 +117,7 @@ bool _deepsleep = true;
 
 void setup() {
   Serial.begin(115200);
-  Serial.println(millis());
+  Serial.println(millis()); Serial.println(": Setup");
 
   setup_wifi();
 
