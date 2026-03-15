@@ -105,14 +105,16 @@ void deepsleep() {
   //WiFi.mode(WIFI_OFF);
 
   Serial.print(millis()); Serial.println(": ESP.deepSleep");
-  delay(500);
-  ESP.deepSleep(5e6);
-  delay(500);
-  Serial.print(millis()); Serial.println(": ESP.deepSleep() failed. This code should not be reached.");
-  delay(500);
+  delay(100);
+  ESP.deepSleep(27e6);
+  delay(100);
+  while (1) {
+    Serial.print(millis()); Serial.println(": ESP.deepSleep() failed. This code should not be reached.");
+    delay(5000);
+  }
 }
 
-bool _deepsleep = false;
+bool _deepsleep = true;
 
 void setup() {
   Serial.begin(115200);
@@ -121,6 +123,7 @@ void setup() {
   setup_wifi();
 
   if (_deepsleep) {
+    delay(2000);
     deepsleep();
   }
 }
