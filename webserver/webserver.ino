@@ -38,8 +38,7 @@ void onStationModeDisconnected(const WiFiEventStationModeDisconnected &event) {
 }
 
 void onStationModeGotIP(const WiFiEventStationModeGotIP &event) {
-  Serial.print(millis()); Serial.print(": onStationModeGotIP, IP: ");
-  Serial.println(WiFi.localIP());
+  Serial.print(millis()); Serial.print(": onStationModeGotIP, IP: "); Serial.println(WiFi.localIP());
 }
 
 void onStationModeAuthModeChanged(const WiFiEventStationModeAuthModeChanged &event) {
@@ -93,9 +92,9 @@ void setup_wifi() {
   Serial.print(millis()); Serial.println(F(": WiFi connected"));
 
   // Print the IP address
-  Serial.print(millis()); Serial.print("IP: "); Serial.println(WiFi.localIP());
+  Serial.print(millis()); Serial.print(": IP: "); Serial.println(WiFi.localIP());
 
-  Serial.print(millis()); Serial.println("Verbunden mit BSSID: " + WiFi.BSSIDstr());
+  Serial.print(millis()); Serial.println(": BSSID: " + WiFi.BSSIDstr());
 }
 
 void deepsleep() {
